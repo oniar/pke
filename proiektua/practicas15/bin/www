@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('practicas15:server');
+var http = require('http');
+var fs = require("fs");
+var https = require("https");
+
+
+/*
+ * Cifrados
+ * En heroku y supongo que linux Tambien usar ruta ('certs/quiz-2015-key.pem')
+ * en windows ('../certs/quiz-2015-key.pem')
+ */
+var options = {
+	    key: fs.readFileSync('certs/quiz-2015-key.pem').toString(),
+	    cert: fs.readFileSync('certs/quiz-2015-cert.pem').toString()
+	};
+
+app.set('port', process.env.PORT || 3000);
+
+var server = app.listen(app.get('port'), function() {
+  debug('Express server listening on port ' + server.address().port);
+  console.log('Express server listening on port ' + app.get('port'));
+});

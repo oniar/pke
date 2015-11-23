@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>placeForMe</title>
+	<link rel='stylesheet' href='/bootstrap-3.3.5-dist/css/bootstrap.css' />
+	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
+	<link href='//fonts.googleapis.com/css?family=Ubuntu:700' rel='stylesheet' type='text/css'>
+	<link href="/assets/css/bootstrap-responsive.css" rel="stylesheet">
+	<div id="fb-root"></div>
+
+</head>
+
+<body>
+<div class="panel panel-default">
+	<div class="panel-body">
+		<span href="/"><div class="heading" style="background-image: url(/header.jpg);  border: 1px solid #000000;">
+    		<h1 align="center" style="color:#FFFFFF; font-family: 'Ubuntu', sans-serif;">placeForMe</h1>
+    			<p align="center" style="color:#FFFFFF; font-family: 'Ubuntu', sans-serif; ">Cálculo de demanda de optativas</p>
+		</div></span>
+
+		<div class="media">
+			<div class="media-body">
+
+				<nav class="navbar navbar-default">
+					<div class="container">
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar1" aria-expanded="false" aria-controls="navbar">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+
+						</div>
+						<div id="navbar1" class="navbar-collapse collapse">
+							<ul class="nav navbar-nav">
+								<li <% if(session.where==='index'){ %>class="active"<% } %>><a class="navbar-link" href="/">Inicio</a></li>
+								<% if (session.user) { %>
+									<% if ( session.user.role==="ADMIN") { %>
+										<li <% if(session.where==='users'){ %>class="active"<% } %>><a class="navbar-link" href="/manager">Gestión de usuarios</a></li>
+										<li <% if(session.where==='logs'){ %>class="active"<% } %>><a class="navbar-link" href="/manager/viewAllLogs">Visualizar Logs</a></li>
+									<% } %>
+									<% if ( session.user.role==="STUDENT") { %>
+										<li <% if(session.where==='my_courses'){ %>class="active"<% } %>><a class="navbar-link" href="/students/courses">Mis Asignaturas</a></li>
+									<% } %>
+									<% if ( session.user.role==="STUDENT") { %>
+										<li <% if(session.where==='account'){ %>class="active"<% } %>><a class="navbar-link" href="/students/edit">Editar mi cuenta</a></li>
+										<li <% if(session.where==='contact'){ %>class="active"<% } %>><a class="navbar-link" href="/contactStudent">Contactanos</a></li>
+									<% } %>
+									<% if ( session.user.role==="ADMIN" || session.user.role==="MANAGER") { %>
+										<li <% if(session.where==='all_courses'){ %>class="active"<% } %>><a class="navbar-link" href="/course/allcourses">Gestión de asignaturas</a></li>
+									<% } %>
+								<% } %>
+								<% if (!session.user) { %>
+								<li <% if(session.where==='contact'){ %>class="active"<% } %>><a class="navbar-link" href="/contact">Contactanos</a></li>
+								<% } %>
+						</ul>
+
+							<% if (!session.user) { %>
+								<form class="navbar-form navbar-right" method="post" action="/login">
+									<div class="form-group">
+										<input name="login" type="text" placeholder="Correo" class="form-control">
+									</div>
+									<div class="form-group">
+										<input name="password" type="password" placeholder="Contraseña" class="form-control">
+									</div>
+									<div class="form-group center">
+										<button type="submit" class="btn btn-default">Iniciar sesión</button>
+									</div>
+									<div class="form-group center">
+										<a href="/students">Registrarse</a>
+									</div>
+									<div class="form-group center hidden-sm">
+										<span class="hidden-xs"> | </span>
+										<a href="/modifipass">He olvidado mi contraseña</a>
+									</div>
+								</form>
+							<% }else{ %>
+								<form method="post" action="/logout?_method=delete" class="navbar-form navbar-right">
+									<label class="hidden-sm"><%= session.user.email %></label>
+									<button class="btn btn-default" type="submit">Cerrar sesión</button>
+								</form>
+							<% } %>
+						</div>
+					</div>
+				</nav>
+			</div>
+		</div>
+
+<!-- ERRORS MESSAGES -->
+		<section  id="s1">
+			<div>
+				<% if ( !(typeof errors==="undefined") && errors.length) { %>
+				<div class="errors">
+					<% for (var i in errors) { %>
+						<div align="center" class="alert alert-danger alert-dismissible" role="alert">
+							<%- errors[i].message %>
+						</div>
+					<% } %>
+				</div>
+				<% } %>
+
+			</div>
+<!-- END ERRORS MESSAGES -->
+<!-- SUCCESFULL MESSAGES -->
+			<div>
+				<% if ( !(typeof msg==="undefined") && msg.length) { %>
+				<div class="msg">
+					<% for (var i in msg) { %>
+					<div align="center" class="alert alert-success alert-dismissible" role="alert">
+						<%- msg[i].message %>
+					</div>
+					<% } %>
+				</div>
+				<% } %>
+			</div>
+<!-- END SUCCESFULL MESSAGES -->
+
+			<div align="center">
+				<%- body %>
+			</div>
+
+		</section>
+	</div>
+	<div class="panel-footer center">
+		<div class="container">
+	        <div class="row">
+	            <div class="col-md-4">
+					<div class="row">
+						<h3>Dirección</h3>
+					</div>
+					<div class="row">
+						<p>
+							Paseo Manuel Lardizabal 1<br>
+							20018 San Sebastián (Gipuzkoa)<br>
+							</p><p>
+							<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2903.414134795564!2d-2.0094019828033574!3d43.30558936630068!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0000000000000000%3A0x6b04b77ccb51f778!2sFacultad+de+Inform%C3%A1tica!5e0!3m2!1ses!2ses!4v1436171620512" width="300" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
+							</p>
+						</p>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="row">
+						<div class="row">
+							<h2>Redes Sociales</h2>
+						</div>
+						<div class="row social centered">
+							<div class="col-md-6">
+								<div class="facebook">
+									<a target = "_blank" href="https://www.facebook.com/MagnaSIS" class="icon48 icon48-1">Facebook</a>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="linkedin">
+									<a target = "_blank" href="https://www.linkedin.com/company/2687083?trk=tyah&trkInfo=clickedVertical%3Acompany%2Cidx%3A1-2-2%2CtarId%3A1435046170463%2Ctas%3Amagna%20sis" class="icon48 icon48-4">LinkedIn</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row" >
+						<a class="twitter-timeline" href="https://twitter.com/MagnaSIS" data-widget-id="370627588135198720"></a>
+					</div>
+
+				</div>
+				<div class="col-md-4">
+					<div class="row">
+						<a target = "_blank" href="http://www.magnasis.com">
+							<img src="/img/magna.jpg" class="footer-logo"/>
+						</a>
+					</div>
+					<div class="row">
+						<h3>Email</h3>
+					</div>
+					<div class="row">
+						<a href="mailto:magnasis@magnasis.com">magnasis@magnasis.com</a>
+					</div>
+					<div class="row">
+						<h3>Teléfono</h3>
+					</div>
+					<div class="row">
+						<p>(+34) 943015022</p>
+						<p>(+34) 688962462</p>
+					</div>
+				</div>
+			</div>
+			<br>
+			<br>
+			<div class="row" align="center">
+	        	<p><strong>placeForMe  Copyright (C) 2015 by Magna SIS</strong></p>
+	        </div>
+	    </div>
+	</div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="/bootstrap-3.3.5-dist/js/bootstrap.js"></script>
+<script src="/scripts/myScriptEstudiante.js"></script>
+<script src="/scripts/coursesScripts.js"></script>
+<script type="text/javascript">
+	$(function () {
+		$('[data-toggle="tooltip"]').tooltip()
+	});
+</script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script src='https://www.google.com/recaptcha/api.js'></script>
+</body>
+</html>
